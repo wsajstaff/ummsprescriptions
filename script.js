@@ -1,7 +1,7 @@
 const ADMIN_PASSWORD = "securepass"; // Change this to your desired password
 
-// Retrieve stored prescriptions from local storage
-let prescriptions = JSON.parse(localStorage.getItem("prescriptions")) || {};
+// Store prescriptions in memory (Gone on refresh)
+let prescriptions = {};
 
 // Unlock the prescription creator
 function unlockCreator() {
@@ -14,7 +14,37 @@ function unlockCreator() {
     }
 }
 
-// Generate a prescription with a code
+// Fetch real medicine names from RxNorm API
+async function fetchMedicines(query) {
+    if (query.length < 3) return; // Only search if 3+ characters
+    try {
+        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${query}`);
+        let data = await response.json();
+        let medicines = data.drugGroup?.conceptGroup?.flatMap(group => group.conceptProperties) || [];
+        
+        let suggestions = medicines.map(med => med.name).slice(0, 5); // Show top 5 results
+        showMedicineSuggestions(suggestions);
+    } catch (error) {
+        console.error("API Error:", error);
+    }
+}
+
+// Show medicine suggestions in a dropdown
+function showMedicineSuggestions(suggestions) {
+    let list = document.getElementById("medicineSuggestions");
+    list.innerHTML = "";
+    suggestions.forEach(med => {
+        let item = document.createElement("div");
+        item.textContent = med;
+        item.onclick = () => {
+            document.getElementById("medicine").value = med;
+            list.innerHTML = "";
+        };
+        list.appendChild(item);
+    });
+}
+
+// Generate a prescription
 function generatePrescription() {
     let medicine = document.getElementById("medicine").value.trim();
     if (!medicine) {
@@ -24,9 +54,6 @@ function generatePrescription() {
 
     let code = Math.random().toString(36).substring(2, 8).toUpperCase();
     prescriptions[code] = { medicine };
-
-    // Save prescriptions to local storage
-    localStorage.setItem("prescriptions", JSON.stringify(prescriptions));
 
     document.getElementById("generatedCode").innerHTML = `Prescription Code: <strong>${code}</strong>`;
 }
@@ -67,3 +94,8 @@ function downloadPDF(code) {
 
     doc.save(`Prescription_${code}.pdf`);
 }
+
+// Event Listener for Medicine Search
+document.getElementById("medicine").addEventListener("input", (event) => {
+    fetchMedicines(event.target.value);
+});
