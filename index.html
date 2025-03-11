@@ -11,7 +11,7 @@
         <h1>Prescription System</h1>
 
         <!-- Unlock Prescription Creator -->
-        <div class="password-section" id="passwordSection">
+        <div id="passwordSection">
             <h2>Admin Access</h2>
             <label for="password">Enter Password:</label>
             <input type="password" id="password">
@@ -20,15 +20,15 @@
         </div>
 
         <!-- Prescription Creator (Locked until password is entered) -->
-        <div class="form-section" id="creatorSection" style="display: none;">
+        <div id="creatorSection" style="display: none;">
             <h2>Create Prescription</h2>
             <label for="medicine">Medicine:</label>
             <input type="text" id="medicine" placeholder="Enter medicine name" oninput="fetchMedicines(this.value)">
-            <div id="medicineSuggestions" class="suggestions"></div>
+            <div id="medicineSuggestions"></div>
 
-            <label for="dosageForm">Dosage Form:</label>
+            <label for="dosageForm">Dosage/Form:</label>
             <select id="dosageForm">
-                <option value="">Select dosage form</option>
+                <option value="">Select dosage</option>
             </select>
 
             <button onclick="generatePrescription()">Generate Prescription</button>
@@ -36,7 +36,7 @@
         </div>
 
         <!-- Prescription Lookup -->
-        <div class="lookup-section">
+        <div>
             <h2>Lookup Prescription</h2>
             <label for="code">Enter Prescription Code:</label>
             <input type="text" id="code" placeholder="Enter code">
