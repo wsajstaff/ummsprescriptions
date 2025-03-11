@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch RxCUI for a given medicine
     async function getRxCUI(medicineName) {
-        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${medicineName}`);
+        let response = await fetch(`https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search=${medicineName}`);
         let data = await response.json();
 
         if (data.idGroup.rxnormId) {
