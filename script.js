@@ -1,10 +1,33 @@
 const RXNORM_API = "https://rxnav.nlm.nih.gov/REST/drugs.json?name=";
+const ADMIN_PASSWORD = "securepass"; // Change this to your desired password
 
-// Prescription database (replace with a real database later)
-let prescriptions = {
-    "ABC123": { medicine: "Ibuprofen" },
-    "XYZ789": { medicine: "Paracetamol" }
-};
+// Prescription storage (replace with a database later)
+let prescriptions = {};
+
+// Unlock the prescription creator
+function unlockCreator() {
+    let passwordInput = document.getElementById("password").value;
+    if (passwordInput === ADMIN_PASSWORD) {
+        document.getElementById("passwordSection").style.display = "none";
+        document.getElementById("creatorSection").style.display = "block";
+    } else {
+        document.getElementById("passwordError").innerText = "Incorrect password!";
+    }
+}
+
+// Generate a prescription with a code
+function generatePrescription() {
+    let medicine = document.getElementById("medicine").value;
+    if (!medicine) {
+        alert("Please enter a medicine name.");
+        return;
+    }
+
+    let code = Math.random().toString(36).substring(2, 8).toUpperCase();
+    prescriptions[code] = { medicine };
+
+    document.getElementById("generatedCode").innerHTML = `Prescription Code: <strong>${code}</strong>`;
+}
 
 // Lookup prescription by code
 function lookupPrescription() {
