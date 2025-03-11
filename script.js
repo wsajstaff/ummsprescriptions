@@ -17,62 +17,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("createPrescriptionBtn").addEventListener("click", checkPassword);
 
-    // Fetch RxCUI for a given medicine
-    async function getRxCUI(medicineName) {
-        let response = await fetch(`https://clinicaltables.nlm.nih.gov/api/rxterms/v3/search=${medicineName}`);
+    // Fetch medicine suggestions from API
+    async function fetchMedicines(query) {
+        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${query}`);
         let data = await response.json();
+
+        let suggestions = document.getElementById("medicineSuggestions");
+        suggestions.innerHTML = ""; // Clear previous suggestions
 
         if (data.idGroup.rxnormId) {
-            return data.idGroup.rxnormId[0];
-        } else {
-            alert("No RxCUI found for this medicine.");
-            return null;
-        }
-    }
-
-    // Get dosage forms for a given RxCUI
-    async function fetchDosageForms(medicineName) {
-        let rxcui = await getRxCUI(medicineName);
-        if (!rxcui) return;
-
-        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/rxcui/${rxcui}/related.json?tty=SCD+SBD`);
-        let data = await response.json();
-        let forms = data.relatedGroup.conceptGroup;
-
-        let dropdown = document.getElementById("dosageForm");
-        dropdown.innerHTML = "<option>Select dosage form</option>";
-
-        if (forms) {
-            forms.forEach(group => {
-                group.conceptProperties.forEach(item => {
-                    let option = document.createElement("option");
-                    option.value = item.name;
-                    option.textContent = item.name;
-                    dropdown.appendChild(option);
-                });
+            data.idGroup.rxnormId.forEach(id => {
+                let option = document.createElement("option");
+                option.value = query;
+                suggestions.appendChild(option);
             });
-        } else {
-            alert("No dosage forms found.");
         }
     }
 
-    document.getElementById("medicine").addEventListener("change", function () {
-        fetchDosageForms(this.value);
+    document.getElementById("medicine").addEventListener("input", function () {
+        fetchMedicines(this.value);
     });
 
     // Generate prescription and PDF
     function createPrescription() {
         let medicine = document.getElementById("medicine").value;
-        let dosageForm = document.getElementById("dosageForm").value;
-        if (!medicine || dosageForm === "Select dosage form") {
-            alert("Please select a valid medicine and dosage form.");
+        if (!medicine) {
+            alert("Please enter a valid medicine.");
             return;
         }
 
         let prescriptionCode = Math.random().toString(36).substring(7).toUpperCase();
         document.getElementById("prescriptionCode").textContent = `Prescription Code: ${prescriptionCode}`;
 
-        let prescription = { medicine, form: dosageForm, code: prescriptionCode };
+        let prescription = { medicine, code: prescriptionCode };
         generatePDF(prescription);
     }
 
@@ -101,15 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         doc.setFont("helvetica", "bold");
         doc.text(`${prescription.medicine}`, 10, 42);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Form: ${prescription.form}`, 10, 48);
 
         doc.setFontSize(10);
-        doc.text("Take as directed by your doctor.", 10, 56);
-
-        doc.setFontSize(9);
-        doc.text("⚠ May cause drowsiness.", 10, 66);
-        doc.text("⚠ Take with food.", 10, 72);
+        doc.text("Take as directed by your doctor.", 10, 50);
+        doc.text("⚠ May cause drowsiness.", 10, 60);
+        doc.text("⚠ Take with food.", 10, 66);
 
         doc.text("▮▮▮▮▮▮▮▮", 10, 80);
 
