@@ -16,7 +16,7 @@ function unlockCreator() {
 async function fetchMedicines(query) {
     if (query.length < 3) return;
     try {
-        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${query}`);
+        let response = await fetch(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=MEDICINE_NAME${query}`);
         let data = await response.json();
         let medicines = data.drugGroup?.conceptGroup?.flatMap(group => group.conceptProperties) || [];
 
