@@ -10,15 +10,6 @@
     <div class="container">
         <h1>Prescription System</h1>
 
-        <!-- Prescription Creator (Locked with Password) -->
-        <div class="form-section" id="creatorSection" style="display: none;">
-            <h2>Create Prescription</h2>
-            <label for="medicine">Medicine:</label>
-            <input type="text" id="medicine" placeholder="Enter medicine name">
-            <button onclick="generatePrescription()">Generate Prescription</button>
-            <p id="generatedCode"></p>
-        </div>
-
         <!-- Unlock Prescription Creator -->
         <div class="password-section" id="passwordSection">
             <h2>Admin Access</h2>
@@ -26,6 +17,15 @@
             <input type="password" id="password">
             <button onclick="unlockCreator()">Unlock</button>
             <p id="passwordError" style="color: red;"></p>
+        </div>
+
+        <!-- Prescription Creator (Hidden until unlocked) -->
+        <div class="form-section" id="creatorSection" style="display: none;">
+            <h2>Create Prescription</h2>
+            <label for="medicine">Medicine:</label>
+            <input type="text" id="medicine" placeholder="Enter medicine name">
+            <button onclick="generatePrescription()">Generate Prescription</button>
+            <p id="generatedCode"></p>
         </div>
 
         <!-- Prescription Lookup -->
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
