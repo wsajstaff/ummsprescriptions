@@ -3,12 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prescription Lookup</title>
+    <title>Prescription System</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Prescription System</h1>
+
+        <!-- Prescription Creator (Locked with Password) -->
+        <div class="form-section" id="creatorSection" style="display: none;">
+            <h2>Create Prescription</h2>
+            <label for="medicine">Medicine:</label>
+            <input type="text" id="medicine" placeholder="Enter medicine name">
+            <button onclick="generatePrescription()">Generate Prescription</button>
+            <p id="generatedCode"></p>
+        </div>
+
+        <!-- Unlock Prescription Creator -->
+        <div class="password-section" id="passwordSection">
+            <h2>Admin Access</h2>
+            <label for="password">Enter Password:</label>
+            <input type="password" id="password">
+            <button onclick="unlockCreator()">Unlock</button>
+            <p id="passwordError" style="color: red;"></p>
+        </div>
 
         <!-- Prescription Lookup -->
         <div class="lookup-section">
