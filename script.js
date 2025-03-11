@@ -1,8 +1,8 @@
 const RXNORM_API = "https://rxnav.nlm.nih.gov/REST/drugs.json?name=";
 const ADMIN_PASSWORD = "securepass"; // Change this to your desired password
 
-// Prescription storage (replace with a database later)
-let prescriptions = {};
+// Retrieve stored prescriptions from local storage
+let prescriptions = JSON.parse(localStorage.getItem("prescriptions")) || {};
 
 // Unlock the prescription creator
 function unlockCreator() {
@@ -17,7 +17,7 @@ function unlockCreator() {
 
 // Generate a prescription with a code
 function generatePrescription() {
-    let medicine = document.getElementById("medicine").value;
+    let medicine = document.getElementById("medicine").value.trim();
     if (!medicine) {
         alert("Please enter a medicine name.");
         return;
@@ -25,6 +25,9 @@ function generatePrescription() {
 
     let code = Math.random().toString(36).substring(2, 8).toUpperCase();
     prescriptions[code] = { medicine };
+
+    // Save prescriptions to local storage
+    localStorage.setItem("prescriptions", JSON.stringify(prescriptions));
 
     document.getElementById("generatedCode").innerHTML = `Prescription Code: <strong>${code}</strong>`;
 }
