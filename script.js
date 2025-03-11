@@ -1,4 +1,3 @@
-const RXNORM_API = "https://rxnav.nlm.nih.gov/REST/drugs.json?name=";
 const ADMIN_PASSWORD = "securepass"; // Change this to your desired password
 
 // Retrieve stored prescriptions from local storage
