@@ -19,11 +19,18 @@
             <p id="passwordError" style="color: red;"></p>
         </div>
 
-        <!-- Prescription Creator (Hidden until unlocked) -->
+        <!-- Prescription Creator (Locked until password is entered) -->
         <div class="form-section" id="creatorSection" style="display: none;">
             <h2>Create Prescription</h2>
             <label for="medicine">Medicine:</label>
-            <input type="text" id="medicine" placeholder="Enter medicine name">
+            <input type="text" id="medicine" placeholder="Enter medicine name" oninput="fetchMedicines(this.value)">
+            <div id="medicineSuggestions" class="suggestions"></div>
+
+            <label for="dosageForm">Dosage Form:</label>
+            <select id="dosageForm">
+                <option value="">Select dosage form</option>
+            </select>
+
             <button onclick="generatePrescription()">Generate Prescription</button>
             <p id="generatedCode"></p>
         </div>
