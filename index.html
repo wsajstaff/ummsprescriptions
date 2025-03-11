@@ -3,28 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake Prescription System</title>
+    <title>Prescription Lookup</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Fake Prescription System</h1>
-
-        <!-- Prescription Creator (Locked) -->
-        <div class="form-section">
-            <h2>Create Prescription (Locked)</h2>
-            <input type="password" id="adminPass" placeholder="Enter Admin Password">
-            <button onclick="unlockForm()">Unlock</button>
-
-            <div id="prescriptionForm" style="display: none;">
-                <label for="medicine">Medicine:</label>
-                <input type="text" id="medicine" list="medicineList" placeholder="Search medicine">
-                <datalist id="medicineList"></datalist>
-
-                <button onclick="generatePrescription()">Generate Prescription</button>
-                <p id="generatedCode"></p>
-            </div>
-        </div>
+        <h1>Prescription System</h1>
 
         <!-- Prescription Lookup -->
         <div class="lookup-section">
