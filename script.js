@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const password = "yourpassword"; // Change this
+    const password = "secure"; // Change this
     let authenticated = false;
 
     // Show password prompt before allowing prescription creation
