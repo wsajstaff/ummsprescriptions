@@ -1,67 +1,45 @@
-const RXNORM_API = "https://rxnav.nlm.nih.gov/REST/drugs.json?name=";
-const ADMIN_PASSWORD = "securepass"; // Change this to your desired password
-
-// Prescription storage (replace with a database later)
-let prescriptions = {};
-
-// Unlock the prescription creator
-function unlockCreator() {
-    let passwordInput = document.getElementById("password").value;
-    if (passwordInput === ADMIN_PASSWORD) {
-        document.getElementById("passwordSection").style.display = "none";
-        document.getElementById("creatorSection").style.display = "block";
-    } else {
-        document.getElementById("passwordError").innerText = "Incorrect password!";
-    }
-}
-
-// Generate a prescription with a code
 function generatePrescription() {
-    let medicine = document.getElementById("medicine").value;
-    if (!medicine) {
-        alert("Please enter a medicine name.");
-        return;
-    }
+    const patientName = document.getElementById('patientName').value;
+    const medicationName = document.getElementById('medicationName').value;
+    const dosage = document.getElementById('dosage').value;
+    const directions = document.getElementById('directions').value;
+    const doctorName = document.getElementById('doctorName').value;
+    const date = document.getElementById('date').value;
 
-    let code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    prescriptions[code] = { medicine };
-
-    document.getElementById("generatedCode").innerHTML = `Prescription Code: <strong>${code}</strong>`;
-}
-
-// Lookup prescription by code
-function lookupPrescription() {
-    let code = document.getElementById("code").value.toUpperCase();
-    let prescription = prescriptions[code];
-
-    if (!prescription) {
-        document.getElementById("prescriptionDetails").innerHTML = "<p style='color: red;'>Prescription not found!</p>";
-        return;
-    }
-
-    let detailsHTML = `
-        <p><strong>Medicine:</strong> ${prescription.medicine}</p>
-        <button onclick="downloadPDF('${code}')">Download PDF</button>
+    // Prescription Text
+    const prescriptionText = `
+        Patient: ${patientName}
+        Medication: ${medicationName}
+        Dosage: ${dosage}
+        Directions: ${directions}
+        Doctor: ${doctorName}
+        Date: ${date}
     `;
 
-    document.getElementById("prescriptionDetails").innerHTML = detailsHTML;
+    // Medication Label
+    const labelText = `
+        ${medicationName} - ${dosage}
+        Directions: ${directions}
+        Doctor: Dr. ${doctorName}
+        Patient: ${patientName}
+        Date: ${date}
+    `;
+
+    // Output Prescription Text
+    document.getElementById('prescriptionText').textContent = prescriptionText;
+    document.getElementById('labelText').textContent = labelText;
+
+    // Show the Output
+    document.getElementById('prescriptionOutput').style.display = 'block';
 }
 
-// Generate and download a prescription PDF
-function downloadPDF(code) {
-    let prescription = prescriptions[code];
-    if (!prescription) return;
+function downloadPDF() {
+    const doc = new jsPDF();
+    const prescriptionText = document.getElementById('prescriptionText').textContent;
+    const labelText = document.getElementById('labelText').textContent;
 
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
+    doc.text(20, 30, `Prescription: \n\n${prescriptionText}`);
+    doc.text(20, 100, `Medication Label: \n\n${labelText}`);
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.text("Prescription", 20, 20);
-
-    doc.setFontSize(12);
-    doc.text(`Prescription Code: ${code}`, 20, 40);
-    doc.text(`Medicine: ${prescription.medicine}`, 20, 50);
-
-    doc.save(`Prescription_${code}.pdf`);
+    doc.save('prescription.pdf');
 }
